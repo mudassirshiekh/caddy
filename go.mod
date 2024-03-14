@@ -9,8 +9,8 @@ require (
 	github.com/aryann/difflib v0.0.0-20210328193216-ff5ff6dc229b
 	github.com/caddyserver/certmagic v0.19.2
 	github.com/dustin/go-humanize v1.0.1
-	github.com/go-chi/chi v4.1.2+incompatible
-	github.com/google/cel-go v0.15.1
+	github.com/go-chi/chi v1.5.5
+	github.com/google/cel-go v0.20.0
 	github.com/google/uuid v1.3.1
 	github.com/klauspost/compress v1.17.0
 	github.com/klauspost/cpuid/v2 v2.2.5
@@ -34,22 +34,21 @@ require (
 	go.opentelemetry.io/otel/sdk v1.16.0
 	go.uber.org/zap v1.25.0
 	golang.org/x/crypto v0.14.0
-	golang.org/x/exp v0.0.0-20230310171629-522b1b587ee0
+	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 	golang.org/x/net v0.17.0
 	golang.org/x/sync v0.4.0
 	golang.org/x/term v0.13.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20230803162519-f966b187b2e5
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
 	github.com/Microsoft/go-winio v0.6.0 // indirect
-	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230305170008-8188dc5388df // indirect
+	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fxamacker/cbor/v2 v2.5.0 // indirect
 	github.com/go-chi/chi/v5 v5.0.10 // indirect
-	github.com/golang/glog v1.1.0 // indirect
+	github.com/golang/glog v1.1.2 // indirect
 	github.com/google/certificate-transparency-go v1.1.6 // indirect
 	github.com/google/go-tpm v0.9.0 // indirect
 	github.com/google/go-tspi v0.3.0 // indirect
@@ -67,8 +66,9 @@ require (
 	go.opentelemetry.io/contrib/propagators/jaeger v1.17.0 // indirect
 	go.opentelemetry.io/contrib/propagators/ot v1.17.0 // indirect
 	go.uber.org/mock v0.3.0 // indirect
-	google.golang.org/genproto v0.0.0-20230913181813-007df8e322eb // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230920204549-e6e6cdab5c13 // indirect
+	google.golang.org/genproto v0.0.0-20231120223509-83a465c0220f // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20231120223509-83a465c0220f // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231127180814-3a041ad873d4 // indirect
 )
 
 require (
@@ -146,7 +146,7 @@ require (
 	golang.org/x/sys v0.13.0
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/tools v0.10.0 // indirect
-	google.golang.org/grpc v1.58.2 // indirect
+	google.golang.org/grpc v1.59.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	howett.net/plist v1.0.0 // indirect
