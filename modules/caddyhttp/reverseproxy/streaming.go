@@ -182,7 +182,7 @@ func (h *Handler) handleUpgradeResponse(logger *zap.Logger, wg *sync.WaitGroup, 
 	defer deleteFrontConn()
 	defer deleteBackConn()
 
-	spc := switchProtocolCopier{user: conn, backend: backConn}
+	spc := switchProtocolCopier{user: conn, backend: backConn, wg: wg}
 
 	// setup the timeout if requested
 	var timeoutc <-chan time.Time
@@ -193,6 +193,7 @@ func (h *Handler) handleUpgradeResponse(logger *zap.Logger, wg *sync.WaitGroup, 
 	}
 
 	errc := make(chan error, 1)
+	wg.Add(2)
 	go spc.copyToBackend(errc)
 	go spc.copyFromBackend(errc)
 	select {
@@ -590,16 +591,19 @@ func (m *maxLatencyWriter) stop() {
 // forth have nice names in stacks.
 type switchProtocolCopier struct {
 	user, backend io.ReadWriteCloser
+	wg            *sync.WaitGroup
 }
 
 func (c switchProtocolCopier) copyFromBackend(errc chan<- error) {
 	_, err := io.Copy(c.user, c.backend)
 	errc <- err
+	c.wg.Done()
 }
 
 func (c switchProtocolCopier) copyToBackend(errc chan<- error) {
 	_, err := io.Copy(c.backend, c.user)
 	errc <- err
+	c.wg.Done()
 }
 
 var streamingBufPool = sync.Pool{
