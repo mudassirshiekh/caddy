@@ -212,6 +212,14 @@ func (rw *responseWriter) Flush() {
 		// to rw.Write (see bug in #4314)
 		return
 	}
+	// also flushes the encoder, if any
+	// see: https://github.com/jjiang-stripe/caddy-slow-gzip
+	if rw.w != nil {
+		err := rw.w.Flush()
+		if err != nil {
+			return err
+		}
+	}
 	//nolint:bodyclose
 	http.NewResponseController(rw.ResponseWriter).Flush()
 }
@@ -408,6 +416,7 @@ type encodingPreference struct {
 type Encoder interface {
 	io.WriteCloser
 	Reset(io.Writer)
+	Flush() error // encoder by default buffers data to maximize compressing rate
 }
 
 // Encoding is a type which can create encoders of its kind
