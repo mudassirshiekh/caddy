@@ -106,12 +106,15 @@ type Handler struct {
 	// response is recognized as a streaming response, or if its
 	// content length is -1; for such responses, writes are flushed
 	// to the client immediately.
-	//
-	// Normally, a request will be canceled if the client disconnects
-	// before the response is received from the backend. If explicitly
-	// set to -1, client disconnection will be ignored and the request
-	// will be completed to help facilitate low-latency streaming.
 	FlushInterval caddy.Duration `json:"flush_interval,omitempty"`
+
+	// Normally, a request will be canceled if the client disconnects
+	// before the response is received from the backend. If enabled,
+	// client disconnection will be ignored and the request with the
+	// backend will carry on until the backend terminates it. This
+	// can help facilitate low-latency streaming. See #4922 and #4952.
+	// EXPERIMENTAL: Will likely be removed in the future.
+	IgnoreClientGone bool `json:"ignore_client_gone,omitempty"`
 
 	// A list of IP ranges (supports CIDR notation) from which
 	// X-Forwarded-* header values should be trusted. By default,
@@ -773,12 +776,15 @@ func (h *Handler) reverseProxy(rw http.ResponseWriter, req *http.Request, origRe
 	}
 	req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
 
-	// if FlushInterval is explicitly configured to -1 (i.e. flush continuously to achieve
-	// low-latency streaming), don't let the transport cancel the request if the client
-	// disconnects: user probably wants us to finish sending the data to the upstream
-	// regardless, and we should expect client disconnection in low-latency streaming
-	// scenarios (see issue #4922)
-	if h.FlushInterval == -1 {
+	// if enabled, don't let the transport cancel the request if the client disconnects:
+	// user probably wants us to finish sending the data to the upstream regardless,
+	// and we should expect client disconnection in low-latency streaming scenarios
+	// (see issue #4922)
+	// TODO: An ideal solution, if the client disconnects before the backend is done
+	// receiving data from the proxy, is to wait until the baxkend is done receiving
+	// the data and then close the connection with the backend, rather than an explicit
+	// option to always leave it open...
+	if h.IgnoreClientGone {
 		req = req.WithContext(ignoreClientGoneContext{req.Context()})
 	}
 
